@@ -2,53 +2,120 @@
 <html lang="hu">
   <head>
     <meta charset="UTF-8" />
-    <title>Adatvizualizáció – Teszt oldal</title>
+    <title>Adatvizualizáció – Chromil9</title>
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
     <style>
       body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f9;
-        color: #333;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f0f2f5;
+        color: #222;
         margin: 40px;
         text-align: center;
       }
       h1 {
-        color: #2a4d69;
+        color: #1e3a8a;
       }
-      #chart {
-        margin: 40px auto;
-        width: 60%;
+      h2 {
+        margin-top: 60px;
+        color: #334155;
+      }
+      p {
+        max-width: 600px;
+        margin: 0 auto 20px;
+        line-height: 1.5;
+      }
+      .chart {
+        margin: 0 auto;
+        width: 70%;
       }
     </style>
   </head>
   <body>
-    <h1>Első Vega-Lite vizualizációm</h1>
-    <p>Ez az első adatvizualizációm a félévközi projekthez.</p>
+    <h1>Adatvizualizációim – Chromil9</h1>
+    <p>Ebben a projektben három különböző Vega-Lite vizualizációt készítettem a városok népességadatai alapján.</p>
 
-    <div id="chart"></div>
+    <h2>1. Oszlopdiagram – Városok lakossága (2024)</h2>
+    <div id="chart1" class="chart"></div>
+
+    <h2>2. Vonaldiagram – Népesség alakulása (2022–2024)</h2>
+    <div id="chart2" class="chart"></div>
+
+    <h2>3. Kördiagram – Népességi arányok (2024)</h2>
+    <div id="chart3" class="chart"></div>
 
     <script>
-      const spec = {
+      // 1. Oszlopdiagram
+      const spec1 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "Egyszerű oszlopdiagram példája",
+        "description": "Városok lakossága 2024-ben",
         "data": {
           "values": [
-            {"Város": "Csíkszereda", "Lakosság": 34000},
-            {"Város": "Székelyudvarhely", "Lakosság": 37000},
+            {"Város": "Csíkszereda", "Lakosság": 36000},
+            {"Város": "Székelyudvarhely", "Lakosság": 33000},
             {"Város": "Marosvásárhely", "Lakosság": 92000}
           ]
         },
         "mark": "bar",
         "encoding": {
-          "x": {"field": "Város", "type": "nominal", "title": "Városok"},
-          "y": {"field": "Lakosság", "type": "quantitative", "title": "Lakosság (fő)"},
+          "x": {"field": "Város", "type": "nominal"},
+          "y": {"field": "Lakosság", "type": "quantitative"},
           "color": {"field": "Város", "type": "nominal"}
         }
       };
 
-      vegaEmbed('#chart', spec);
+      // 2. Vonaldiagram
+      const spec2 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "Népességváltozás 2022–2024 között",
+        "data": {
+          "values": [
+            {"Év": 2022, "Város": "Csíkszereda", "Lakosság": 34000},
+            {"Év": 2023, "Város": "Csíkszereda", "Lakosság": 35600},
+            {"Év": 2024, "Város": "Csíkszereda", "Lakosság": 36000},
+            {"Év": 2022, "Város": "Székelyudvarhely", "Lakosság": 37000},
+            {"Év": 2023, "Város": "Székelyudvarhely", "Lakosság": 35000},
+            {"Év": 2024, "Város": "Székelyudvarhely", "Lakosság": 33000},
+            {"Év": 2022, "Város": "Marosvásárhely", "Lakosság": 90000},
+            {"Év": 2023, "Város": "Marosvásárhely", "Lakosság": 91000},
+            {"Év": 2024, "Város": "Marosvásárhely", "Lakosság": 92000}
+          ]
+        },
+        "mark": "line",
+        "encoding": {
+          "x": {"field": "Év", "type": "ordinal"},
+          "y": {"field": "Lakosság", "type": "quantitative"},
+          "color": {"field": "Város", "type": "nominal"}
+        }
+      };
+
+      // 3. Kördiagram
+      const spec3 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "Népességi arányok 2024-ben",
+        "data": {
+          "values": [
+            {"Város": "Csíkszereda", "Lakosság": 36000},
+            {"Város": "Székelyudvarhely", "Lakosság": 33000},
+            {"Város": "Marosvásárhely", "Lakosság": 92000}
+          ]
+        },
+        "mark": {"type": "arc", "innerRadius": 50},
+        "encoding": {
+          "theta": {"field": "Lakosság", "type": "quantitative"},
+          "color": {"field": "Város", "type": "nominal"},
+          "tooltip": [
+            {"field": "Város", "type": "nominal"},
+            {"field": "Lakosság", "type": "quantitative"}
+          ]
+        },
+        "view": {"stroke": null}
+      };
+
+      vegaEmbed("#chart1", spec1);
+      vegaEmbed("#chart2", spec2);
+      vegaEmbed("#chart3", spec3);
     </script>
   </body>
 </html>
