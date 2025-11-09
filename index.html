@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Adatvizualizáció – Teszt oldal</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 40px;
+        text-align: center;
+      }
+      h1 {
+        color: #2a4d69;
+      }
+      #chart {
+        margin: 40px auto;
+        width: 60%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Első Vega-Lite vizualizációm</h1>
+    <p>Ez az első adatvizualizációm a félévközi projekthez.</p>
+
+    <div id="chart"></div>
+
+    <script>
+      const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "Egyszerű oszlopdiagram példája",
+        "data": {
+          "values": [
+            {"Város": "Csíkszereda", "Lakosság": 34000},
+            {"Város": "Székelyudvarhely", "Lakosság": 37000},
+            {"Város": "Marosvásárhely", "Lakosság": 92000}
+          ]
+        },
+        "mark": "bar",
+        "encoding": {
+          "x": {"field": "Város", "type": "nominal", "title": "Városok"},
+          "y": {"field": "Lakosság", "type": "quantitative", "title": "Lakosság (fő)"},
+          "color": {"field": "Város", "type": "nominal"}
+        }
+      };
+
+      vegaEmbed('#chart', spec);
+    </script>
+  </body>
+</html>
