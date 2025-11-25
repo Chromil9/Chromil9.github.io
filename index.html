@@ -1,191 +1,186 @@
 <!DOCTYPE html>
 <html lang="hu">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Adatvizualizáció – Chromil9</title>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    <style>
-      body {
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #f0f2f5;
-        color: #222;
-        margin: 40px;
-        text-align: center;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Premier League – Sport Adatvizualizáció</title>
+
+  <!-- Vega-Lite -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <!-- ======= STÍLUS (ugyanaz a felépítés mint a képen) ======= -->
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f2f4f8;
+      margin: 0;
+      padding: 40px 0;
+      text-align: center;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 30px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: #1a3d7c;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: #1a355e;
+      font-size: 22px;
+    }
+
+    .chart-card {
+      background: white;
+      width: 80%;
+      margin: 35px auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .chart-container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .vega-embed canvas, 
+    .vega-embed svg {
+      max-width: 100% !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Premier League – Erling Haaland Elemzés</h1>
+
+  <!-- ============================================================
+        1. OSZLOPDIAGRAM – Haaland gólok matchweek szerint
+       ============================================================ -->
+  <div class="chart-card">
+    <h2>1. Oszlopdiagram – Haaland gólok (Matchweek 1–11)</h2>
+    <div id="chart1" class="chart-container"></div>
+  </div>
+
+  <!-- ============================================================
+        2. VONALDIAGRAM – Haaland xG trend (Matchweek szerint)
+       ============================================================ -->
+  <div class="chart-card">
+    <h2>2. Vonaldiagram – Haaland xG alakulása</h2>
+    <div id="chart2" class="chart-container"></div>
+  </div>
+
+  <!-- ============================================================
+        3. KÖRDIAGRAM – A Manchester City játékosok gólmegoszlása
+       ============================================================ -->
+  <div class="chart-card">
+    <h2>3. Kördiagram – Manchester City gólmegoszlása</h2>
+    <div id="chart3" class="chart-container"></div>
+  </div>
+
+
+  <!-- ===================== VEGA-LITE SCRIPT ===================== -->
+  <script>
+    /* --------------------------------------------------------------
+        1. OSZLOPOS DIAGRAM
+        Haaland – valódi gólok matchweek szerint
+    -------------------------------------------------------------- */
+    const chart1 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "description": "Haaland goals per matchweek",
+      "data": {
+        "values": [
+          {"Week": 1, "Goals": 2},
+          {"Week": 2, "Goals": 0},
+          {"Week": 3, "Goals": 1},
+          {"Week": 4, "Goals": 2},
+          {"Week": 5, "Goals": 1},
+          {"Week": 6, "Goals": 2},
+          {"Week": 7, "Goals": 1},
+          {"Week": 8, "Goals": 2},
+          {"Week": 9, "Goals": 0},
+          {"Week": 10,"Goals": 2},
+          {"Week": 11,"Goals": 0}
+        ]
+      },
+      "mark": "bar",
+      "encoding": {
+        "x": {"field": "Week", "type": "ordinal", "title": "Matchweek"},
+        "y": {"field": "Goals", "type": "quantitative", "title": "Gólok száma"},
+        "color": {"value": "#1e88e5"}
       }
-      h1 {
-        color: #1e3a8a;
+    };
+
+    /* --------------------------------------------------------------
+        2. VONALDIAGRAM
+        Haaland xG (Expected Goals) trendje
+    -------------------------------------------------------------- */
+    const chart2 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "description": "Haaland xG trend",
+      "data": {
+        "values": [
+          {"Week": 1, "xG": 0.87},
+          {"Week": 2, "xG": 0.80},
+          {"Week": 3, "xG": 0.32},
+          {"Week": 4, "xG": 0.42},
+          {"Week": 5, "xG": 0.43},
+          {"Week": 6, "xG": 0.46},
+          {"Week": 7, "xG": 0.22},
+          {"Week": 8, "xG": 0.18},
+          {"Week": 9, "xG": 0.41},
+          {"Week": 10,"xG": 0.31},
+          {"Week": 11,"xG": 0.05}
+        ]
+      },
+      "mark": {"type": "line", "point": true},
+      "encoding": {
+        "x": {"field": "Week", "type": "ordinal", "title": "Matchweek"},
+        "y": {"field": "xG", "type": "quantitative", "title": "Expected Goals (xG)"},
+        "color": {"value": "#e53935"}
       }
-      h2 {
-        margin-top: 60px;
-        color: #334155;
-      }
-      p {
-        max-width: 600px;
-        margin: 0 auto 20px;
-        line-height: 1.5;
-      }
-      .chart {
-        margin: 0 auto;
-        width: 70%;
-      }
-    </style>
-    <style>
-      :root {
-        --bg-start: #f8fafc;
-        --bg-end: #eef2f7;
-        --text: #111827;
-        --primary: #1e3a8a;
-        --muted: #475569;
-        --card: #ffffff;
-        --ring: 30, 58, 138;
-      }
+    };
 
-      * { box-sizing: border-box; }
+    /* --------------------------------------------------------------
+        3. KÖRDIAGRAM
+        Manchester City – játékosok gólmegoszlása
+        (például: Haaland + Foden + González)
+    -------------------------------------------------------------- */
+    const chart3 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "description": "Goal share",
+      "data": {
+        "values": [
+          {"Player": "Haaland", "Goals": 11},
+          {"Player": "Foden", "Goals": 4},
+          {"Player": "Nicolás González", "Goals": 3}
+        ]
+      },
+      "mark": {"type": "arc", "innerRadius": 50},
+      "encoding": {
+        "theta": {"field": "Goals", "type": "quantitative"},
+        "color": {"field": "Player", "type": "nominal"},
+        "tooltip": [
+          {"field": "Player", "type": "nominal", "title": "Játékos"},
+          {"field": "Goals", "type": "quantitative", "title": "Gólok száma"}
+        ]
+      },
+      "view": {"stroke": null}
+    };
 
-      body {
-        font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
-        color: var(--text);
-        margin: 0;
-        padding: 40px 16px;
-        text-align: center;
-        background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
-        -webkit-font-smoothing: antialiased;
-      }
+    /* --- Embed --- */
+    vegaEmbed("#chart1", chart1);
+    vegaEmbed("#chart2", chart2);
+    vegaEmbed("#chart3", chart3);
 
-      h1 {
-        color: var(--primary);
-        font-size: 2rem;
-        margin: 0 0 12px;
-        letter-spacing: 0.2px;
-      }
+  </script>
 
-      h2 {
-        margin: 40px 0 12px;
-        color: #334155;
-        font-size: 1.25rem;
-      }
-
-      p {
-        max-width: 720px;
-        margin: 0 auto 28px;
-        line-height: 1.6;
-        color: var(--muted);
-      }
-
-      .chart {
-        margin: 0 auto 24px;
-        width: min(900px, 100%);
-        background: var(--card);
-        border-radius: 14px;
-        padding: 16px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 12px 28px rgba(2, 8, 23, 0.08);
-        border: 1px solid rgba(var(--ring), 0.12);
-        animation: fadeUp 0.4s ease both;
-      }
-
-      .vega-embed,
-      .vega-embed > svg,
-      .vega-embed canvas { max-width: 100% !important; }
-
-      @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(6px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-
-      @media (max-width: 640px) {
-        body { padding: 24px 12px; }
-        h1 { font-size: 1.6rem; }
-        .chart { padding: 12px; }
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Adatvizualizációim – Chromil9</h1>
-    <p>Ebben a projektben három különböző Vega-Lite vizualizációt készítettem a városok népességadatai alapján.</p>
-
-    <h2>1. Oszlopdiagram – Városok lakossága (2024)</h2>
-    <div id="chart1" class="chart"></div>
-
-    <h2>2. Vonaldiagram – Népesség alakulása (2022–2024)</h2>
-    <div id="chart2" class="chart"></div>
-
-    <h2>3. Kördiagram – Népességi arányok (2024)</h2>
-    <div id="chart3" class="chart"></div>
-
-    <script>
-      // 1. Oszlopdiagram
-      const spec1 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "Városok lakossága 2024-ben",
-        "data": {
-          "values": [
-            {"Város": "Csíkszereda", "Lakosság": 36000},
-            {"Város": "Székelyudvarhely", "Lakosság": 33000},
-            {"Város": "Marosvásárhely", "Lakosság": 92000}
-          ]
-        },
-        "mark": "bar",
-        "encoding": {
-          "x": {"field": "Város", "type": "nominal"},
-          "y": {"field": "Lakosság", "type": "quantitative"},
-          "color": {"field": "Város", "type": "nominal"}
-        }
-      };
-
-      // 2. Vonaldiagram
-      const spec2 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "Népességváltozás 2022–2024 között",
-        "data": {
-          "values": [
-            {"Év": 2022, "Város": "Csíkszereda", "Lakosság": 34000},
-            {"Év": 2023, "Város": "Csíkszereda", "Lakosság": 35600},
-            {"Év": 2024, "Város": "Csíkszereda", "Lakosság": 36000},
-            {"Év": 2022, "Város": "Székelyudvarhely", "Lakosság": 37000},
-            {"Év": 2023, "Város": "Székelyudvarhely", "Lakosság": 35000},
-            {"Év": 2024, "Város": "Székelyudvarhely", "Lakosság": 33000},
-            {"Év": 2022, "Város": "Marosvásárhely", "Lakosság": 90000},
-            {"Év": 2023, "Város": "Marosvásárhely", "Lakosság": 91000},
-            {"Év": 2024, "Város": "Marosvásárhely", "Lakosság": 92000}
-          ]
-        },
-        "mark": "line",
-        "encoding": {
-          "x": {"field": "Év", "type": "ordinal"},
-          "y": {"field": "Lakosság", "type": "quantitative"},
-          "color": {"field": "Város", "type": "nominal"}
-        }
-      };
-
-      // 3. Kördiagram
-      const spec3 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "Népességi arányok 2024-ben",
-        "data": {
-          "values": [
-            {"Város": "Csíkszereda", "Lakosság": 36000},
-            {"Város": "Székelyudvarhely", "Lakosság": 33000},
-            {"Város": "Marosvásárhely", "Lakosság": 92000}
-          ]
-        },
-        "mark": {"type": "arc", "innerRadius": 50},
-        "encoding": {
-          "theta": {"field": "Lakosság", "type": "quantitative"},
-          "color": {"field": "Város", "type": "nominal"},
-          "tooltip": [
-            {"field": "Város", "type": "nominal"},
-            {"field": "Lakosság", "type": "quantitative"}
-          ]
-        },
-        "view": {"stroke": null}
-      };
-
-      vegaEmbed("#chart1", spec1);
-      vegaEmbed("#chart2", spec2);
-      vegaEmbed("#chart3", spec3);
-    </script>
-  </body>
+</body>
 </html>
